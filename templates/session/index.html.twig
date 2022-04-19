@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sessions{% endblock %}
+
+{% block body %}
+    <h1>Liste des sessions</h1>
+
+    <a href="{{ path("add_session") }}">Ajouter une session</a>
+
+    <h2>Session en cours</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Intitulé session</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Nb places théoriques</th>
+                <th>Nb places réservés</th>
+                <th>Nb places restantes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+                {% if session.dateDebut < maintenant and session.dateFin > maintenant %}
+                <tr>
+                    <td> <a href="{{ path("show_session",{'id': session.id}) }}">{{ session }}</a></td>
+                    <td>{{ session.dateDebut | date("d/m/y") }}</td>
+                    <td>{{ session.dateFin | date("d/m/y") }}</td>
+                    <td>{{ session.nbPlace }}</td>
+                    <td>{{ session.placeReserve }}</td>
+                    <td>{{ session.placeRestante }}</td>
+                    <td><a href="{{ path("edit_session",{'id': session.id}) }}">EDIT</a></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Session a venir</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Intitulé session</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Nb places théoriques</th>
+                <th>Nb places réservés</th>
+                <th>Nb places restantes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+                {% if session.dateDebut > maintenant %}
+                <tr>
+                    <td> <a href="{{ path("show_session",{'id': session.id}) }}">{{ session }}</a></td>
+                    <td>{{ session.dateDebut | date("d/m/y") }}</td>
+                    <td>{{ session.dateFin | date("d/m/y") }}</td>
+                    <td>{{ session.nbPlace }}</td>
+                    <td>{{ session.placeReserve }}</td>
+                    <td>{{ session.placeRestante }}</td>
+                    <td><a href="{{ path("edit_session",{'id': session.id}) }}">EDIT</a></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Session passé</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Intitulé session</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Nb places théoriques</th>
+                <th>Nb places réservés</th>
+                <th>Nb places restantes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+                {% if session.dateFin < maintenant %}
+                <tr>
+                    <td> <a href="{{ path("show_session",{'id': session.id}) }}">{{ session }}</a></td>
+                    <td>{{ session.dateDebut | date("d/m/y") }}</td>
+                    <td>{{ session.dateFin | date("d/m/y") }}</td>
+                    <td>{{ session.nbPlace }}</td>
+                    <td>{{ session.placeReserve }}</td>
+                    <td>{{ session.placeRestante }}</td>
+                    <td><a href="{{ path("edit_session",{'id': session.id}) }}">EDIT</a></td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des matières{% endblock %}
+
+{% block body %}
+
+    <h1>Matières</h1>
+
+    <a href="{{ path("add_module_formation") }}">Ajouter une matière</a><br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Modules</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for module in modules %}
+                <tr>
+                    <td>{{ module }} ( <a href="{{ path("edit_categorie", {'id': module.categorie.id}) }}">{{ module.categorie }}</a> )</td>
+                    <td>{{ module.description }}</td>
+                    <td><a href="{{ path("edit_module_formation", {'id': module.id }) }}">EDIT</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table> <br>
+
+    <a href="{{ path("add_categorie") }}">Ajouter une categorie</a>
+
+{% endblock %}

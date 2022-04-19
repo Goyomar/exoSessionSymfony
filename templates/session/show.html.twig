@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ session }}{% endblock %}
+
+{% block body %}
+    <h1>{{ session }}</h1>
+
+    <h2>{{ session.formation }}</h2>
+
+    <p> Formateur référent : {{ session.formateur }}</p>
+
+    <p>
+        Date de debut : {{ session.dateDebut|date("d/m/Y") }}<br>
+        Date de fin : {{ session.dateFin|date("d/m/Y") }}<br>
+        Nombre de places : {{ session.nbPlace }}<br>
+        Nombre de places restante : {{ session.placeRestante }}
+    </p>
+
+    <h3>Liste des inscrits</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Stagiaire</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not session.stagiaire.empty %}
+                {% for stag in session.stagiaire %}
+                    <tr>
+                        <td><a href="{{ path("show_stagiaire",{'id': stag.id}) }}">{{ stag }}</a></td>
+                        <td>{{ stag.mail }}</td>
+                        <td>{{ stag.tel }}</td>
+                        <td><a href="{{ path("desinscrire_session",{'idSession': session.id, 'idStagiaire': stag.id}) }}">-</a></td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+
+    <h3>Non inscrit</h3>
+    <ul>
+    {% if session.placeRestante != 0 %}
+        {% for no in nonInscrit %}
+        <li><a href="{{ path("show_stagiaire",{'id': no.id}) }}">{{ no }}</a> <a href="{{ path("inscrire_session",{'idSession': session.id, 'idStagiaire': no.id}) }}">+</a></li>
+        {% endfor %}
+    {% endif %}
+    </ul>
+
+    <h3>Programme</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Nb jours</th>
+                <th>Categorie</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plan in session.planifiers %}
+                <tr>
+                    <td>{{ plan.moduleFormation }}</td>
+                    <td>{{ plan.duree }}</td>
+                    <td>{{ plan.moduleFormation.categorie }}</td>
+                    <td><a href="{{ path("delmodule_session", {'idPlanifier': plan.id, 'idSession': session.id}) }}">-  </a>  <a href="{{ path("edit_planifier", {'id': plan.id}) }}">EDIT</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Non programmer</h3>
+    <ul>
+    {% if session.placeRestante != 0 %}
+        {% for no in nonPlanifier %}
+        <form action="{{ path("addmodule_session", {'idSession': session.id, 'idModule': no.id}) }}" method="POST">
+            <li>{{ no }}<input type="number" name="nbJours" placeholder="nombre jours voulu" required><input type="submit" value="ajouter"></li>
+        </form>
+        {% endfor %}
+    {% endif %}
+    </ul>
+
+    <br><a href="{{ path("add_planifier") }}">Ajouter un module a une session</a>
+
+{% endblock %}
